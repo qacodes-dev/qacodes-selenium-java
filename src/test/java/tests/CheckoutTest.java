@@ -17,6 +17,8 @@ public class CheckoutTest extends BaseTest {
 
         ProductPage productPage = new ProductPage(getDriver());
         productPage.addToCart("Sauce Labs Backpack");
+        Assert.assertEquals(productPage.getCartCount(), 1,
+                "Expected 1 item in cart after addToCart");
         productPage.goToCart();
 
         CheckoutPage checkoutPage = new CheckoutPage(getDriver());

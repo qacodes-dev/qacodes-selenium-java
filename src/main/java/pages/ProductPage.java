@@ -2,10 +2,7 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
-import java.util.List;
 
 public class ProductPage extends BasePage {
 
@@ -32,16 +29,15 @@ public class ProductPage extends BasePage {
     }
 
     public void addToCart(String productName) {
+        // Sauce Demo derives the button's data-test from the product name:
+        // "Sauce Labs Backpack" -> "add-to-cart-sauce-labs-backpack"
+        String slug = productName.toLowerCase()
+                .replaceAll("[()]", "")
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("(^-|-$)", "");
+        By addButton = By.cssSelector("[data-test='add-to-cart-" + slug + "']");
         wait.waitForVisible(INVENTORY_LIST);
-        List<WebElement> items = driver.findElements(By.cssSelector(".inventory_item"));
-        for (WebElement item : items) {
-            String name = item.findElement(By.cssSelector(".inventory_item_name")).getText();
-            if (name.equals(productName)) {
-                item.findElement(By.cssSelector("[data-test^='add-to-cart']")).click();
-                return;
-            }
-        }
-        throw new RuntimeException("Product not found in inventory: " + productName);
+        wait.waitForClickable(addButton).click();
     }
 
     public int getCartCount() {
