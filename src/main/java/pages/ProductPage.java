@@ -37,7 +37,7 @@ public class ProductPage extends BasePage {
                 .replaceAll("(^-|-$)", "");
         By addButton = By.cssSelector("[data-test='add-to-cart-" + slug + "']");
         wait.waitForVisible(INVENTORY_LIST);
-        wait.waitForClickable(addButton).click();
+        wait.waitForClickableInView(addButton).click();
     }
 
     public int getCartCount() {

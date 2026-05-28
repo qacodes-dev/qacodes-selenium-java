@@ -25,7 +25,7 @@ public class CheckoutPage extends BasePage {
     }
 
     public void startCheckout() {
-        wait.waitForClickable(CHECKOUT_BUTTON).click();
+        wait.waitForClickableInView(CHECKOUT_BUTTON).click();
     }
 
     public void fillShipping(String firstName, String lastName, String zip) {
@@ -36,8 +36,8 @@ public class CheckoutPage extends BasePage {
 
     /** Clicks Continue on Step One, then Finish on Step Two. */
     public void submitOrder() {
-        wait.waitForClickable(CONTINUE_BUTTON).click();
-        wait.waitForClickable(FINISH_BUTTON).click();
+        wait.waitForClickableInView(CONTINUE_BUTTON).click();
+        wait.waitForClickableInView(FINISH_BUTTON).click();
     }
 
     public String getConfirmation() {

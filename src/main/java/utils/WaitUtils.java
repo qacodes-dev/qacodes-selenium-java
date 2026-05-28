@@ -1,6 +1,7 @@
 package utils;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -33,5 +34,17 @@ public class WaitUtils {
 
     public void waitForUrlContains(String fragment) {
         wait.until(ExpectedConditions.urlContains(fragment));
+    }
+
+    public WebElement scrollIntoView(By locator) {
+        WebElement el = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        ((JavascriptExecutor) driver)
+                .executeScript("arguments[0].scrollIntoView({block:'center'});", el);
+        return el;
+    }
+
+    public WebElement waitForClickableInView(By locator) {
+        scrollIntoView(locator);
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 }
