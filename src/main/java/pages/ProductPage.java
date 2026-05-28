@@ -1,8 +1,13 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class ProductPage extends BasePage {
 
@@ -29,15 +34,34 @@ public class ProductPage extends BasePage {
     }
 
     public void addToCart(String productName) {
-        // Sauce Demo derives the button's data-test from the product name:
-        // "Sauce Labs Backpack" -> "add-to-cart-sauce-labs-backpack"
+        // Sauce Demo derives button data-test values from the product name:
+        // "Sauce Labs Backpack" -> add-to-cart-sauce-labs-backpack / remove-sauce-labs-backpack
         String slug = productName.toLowerCase()
                 .replaceAll("[()]", "")
                 .replaceAll("[^a-z0-9]+", "-")
                 .replaceAll("(^-|-$)", "");
-        By addButton = By.cssSelector("[data-test='add-to-cart-" + slug + "']");
+        By addButton    = By.cssSelector("[data-test='add-to-cart-" + slug + "']");
+        By removeButton = By.cssSelector("[data-test='remove-" + slug + "']");
+
         wait.waitForVisible(INVENTORY_LIST);
+
+        // Click, then confirm the button flipped to "remove" (proves the React handler fired).
+        // On a slow CI runner the handler may not be attached yet on the first click, so retry once.
         wait.waitForClickableInView(addButton).click();
+        if (!isPresentQuickly(removeButton)) {
+            wait.waitForClickableInView(addButton).click();
+        }
+        wait.waitForVisible(removeButton);
+    }
+
+    private boolean isPresentQuickly(By locator) {
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(2))
+                    .until(ExpectedConditions.presenceOfElementLocated(locator));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
 
     public int getCartCount() {
