@@ -47,4 +47,11 @@ public class WaitUtils {
         scrollIntoView(locator);
         return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
+
+    public void jsClick(By locator) {
+        WebElement el = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", el);
+        js.executeScript("arguments[0].click();", el);
+    }
 }

@@ -45,11 +45,11 @@ public class ProductPage extends BasePage {
 
         wait.waitForVisible(INVENTORY_LIST);
 
-        // Click, then confirm the button flipped to "remove" (proves the React handler fired).
-        // On a slow CI runner the handler may not be attached yet on the first click, so retry once.
-        wait.waitForClickableInView(addButton).click();
+        // JS click bypasses the native-click / React synthetic-event gap that causes no-ops
+        // in headless Linux Chrome. Verify the button flipped to "remove"; retry once if not.
+        wait.jsClick(addButton);
         if (!isPresentQuickly(removeButton)) {
-            wait.waitForClickableInView(addButton).click();
+            wait.jsClick(addButton);
         }
         wait.waitForVisible(removeButton);
     }
